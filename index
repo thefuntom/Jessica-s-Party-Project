@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<!-- saved from url=(0051)file:///C:/Users/cyril/Downloads/index.html -->
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+<html lang="en">
+<head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>🎉 Party Planner Challenge</title>
 <style>
@@ -520,14 +520,16 @@
     </div>
 
     <div class="budget-bar-wrap">
-      <div class="budget-bar-fill" id="budget-bar" style="width: 0%;"></div>
+      <div class="budget-bar-fill" id="budget-bar"></div>
     </div>
     <div class="budget-numbers">
       <span>$0 spent</span>
       <span>$250 budget</span>
     </div>
 
-    <div class="line-items" id="line-items"></div>
+    <div class="line-items" id="line-items">
+      <!-- filled by JS -->
+    </div>
 
     <hr class="divider" id="total-divider" style="display:none">
     <div class="total-line" id="total-line" style="display:none">
@@ -827,6 +829,5 @@
   // Init
   updateUI();
 </script>
-
-
-</body></html>
+</body>
+</html>
