@@ -12,288 +12,125 @@
     font-family: 'Nunito', sans-serif;
     background: #fdf6ec;
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: flex; flex-direction: column; align-items: center;
     padding: 20px 12px 40px;
     background-image: radial-gradient(circle at 10% 20%, #ffe8d6 0%, transparent 50%),
                       radial-gradient(circle at 90% 80%, #e0f0ff 0%, transparent 50%);
   }
 
-  h1.title {
-    font-family: 'Fredoka One', cursive;
-    font-size: clamp(1.8rem, 5vw, 2.8rem);
-    color: #1a1a2e;
-    text-align: center;
-    margin-bottom: 4px;
-  }
-  .subtitle {
-    text-align: center;
-    color: #666;
-    font-size: .95rem;
-    font-weight: 600;
-    margin-bottom: 22px;
-  }
+  h1.title { font-family: 'Fredoka One', cursive; font-size: clamp(1.8rem, 5vw, 2.8rem); color: #1a1a2e; text-align: center; margin-bottom: 4px; }
+  .subtitle { text-align: center; color: #666; font-size: .95rem; font-weight: 600; margin-bottom: 22px; }
 
-  .layout {
-    display: grid;
-    grid-template-columns: 1fr 290px;
-    gap: 20px;
-    width: 100%;
-    max-width: 980px;
-    align-items: start;
-  }
+  .layout { display: grid; grid-template-columns: 1fr 290px; gap: 20px; width: 100%; max-width: 980px; align-items: start; }
 
-  /* STEPS */
   .steps-panel { display: flex; flex-direction: column; gap: 14px; }
 
-  /* WELCOME SCREEN */
-  #welcome-screen {
-    background: #fff;
-    border-radius: 20px;
-    padding: 36px 30px;
-    text-align: center;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    grid-column: 1 / -1;
+  /* WELCOME */
+  #welcome-screen, #end-screen {
+    background: #fff; border-radius: 20px; padding: 36px 30px; text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08); grid-column: 1 / -1;
   }
-  #welcome-screen .big-emoji { font-size: 4rem; margin-bottom: 12px; }
-  #welcome-screen h2 { font-family: 'Fredoka One', cursive; font-size: 2rem; color: #1a1a2e; margin-bottom: 10px; }
-  #welcome-screen p { color: #555; font-size: 1rem; font-weight: 600; line-height: 1.6; max-width: 480px; margin: 0 auto 24px; }
-  .start-btn {
-    background: #1a1a2e;
-    color: #FFD93D;
-    font-family: 'Fredoka One', cursive;
-    font-size: 1.3rem;
-    border: none;
-    border-radius: 14px;
-    padding: 14px 40px;
-    cursor: pointer;
-    transition: transform .18s, box-shadow .18s;
+  #welcome-screen .big-emoji, #end-screen .end-emoji { font-size: 4rem; margin-bottom: 12px; }
+  #welcome-screen h2, #end-screen h2 { font-family: 'Fredoka One', cursive; font-size: 2rem; color: #1a1a2e; margin-bottom: 10px; }
+  #welcome-screen p, #end-screen p { color: #555; font-size: 1rem; font-weight: 600; line-height: 1.6; max-width: 480px; margin: 0 auto 24px; }
+  .start-btn, .play-again-btn {
+    background: #1a1a2e; color: #FFD93D; font-family: 'Fredoka One', cursive; font-size: 1.3rem;
+    border: none; border-radius: 14px; padding: 14px 40px; cursor: pointer; transition: transform .18s, box-shadow .18s;
   }
-  .start-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+  .start-btn:hover, .play-again-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
 
-  /* STEP CARDS */
-  .step-card {
-    background: #fff;
-    border-radius: 18px;
-    padding: 20px 22px;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.06);
-    border: 2px solid transparent;
-    display: none;
-  }
+  #end-screen { display: none; animation: popIn .5s cubic-bezier(.34,1.56,.64,1); }
+  #end-screen.show { display: block; }
+  #end-screen .end-summary { background: #f7f7f7; border-radius: 12px; padding: 14px 18px; margin: 16px auto; max-width: 400px; text-align: left; }
+  #end-screen .es-row { display: flex; justify-content: space-between; font-size: .9rem; font-weight: 700; padding: 4px 0; color: #444; border-bottom: 1px solid #eee; }
+  #end-screen .es-row:last-child { border-bottom: none; color: #1a1a2e; }
+
+  /* STEP CARD */
+  .step-card { background: #fff; border-radius: 18px; padding: 18px 22px; box-shadow: 0 4px 14px rgba(0,0,0,0.06); border: 2px solid transparent; display: none; }
   .step-card.visible { display: block; }
   .step-card.current { border-color: #FFD93D; }
-  .step-card.done { border-color: #e0e0e0; }
+  .step-card.locked { border-color: #6BCB77; padding: 14px 22px; }
 
-  .step-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-  .step-num {
-    font-family: 'Fredoka One', cursive;
-    font-size: 1.4rem;
-    background: #FFD93D;
-    color: #1a1a2e;
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
+  .step-header { display: flex; align-items: center; gap: 10px; }
+  .step-num { font-family: 'Fredoka One', cursive; font-size: 1.4rem; background: #FFD93D; color: #1a1a2e; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .step-num.done-num { background: #6BCB77; color: #fff; }
   .step-title { font-family: 'Fredoka One', cursive; font-size: 1.2rem; color: #1a1a2e; }
   .step-sub { font-size: .82rem; color: #999; font-weight: 600; }
 
-  /* OPTIONS */
-  .options-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-    gap: 10px;
-  }
+  /* Locked summary shown in header */
+  .locked-pick { margin-left: auto; display: none; align-items: center; gap: 8px; }
+  .step-card.locked .locked-pick { display: flex; }
+  .locked-tag { background: #1a1a2e; color: #FFD93D; font-family: 'Fredoka One', cursive; font-size: .82rem; border-radius: 8px; padding: 4px 11px; }
+  .locked-cost { font-family: 'Fredoka One', cursive; color: #FF6B35; font-size: .9rem; }
 
-  .option-btn {
-    background: #f5f5f5;
-    border: 2.5px solid #e0e0e0;
-    border-radius: 14px;
-    padding: 14px 8px 10px;
-    cursor: pointer;
-    text-align: center;
-    font-family: 'Nunito', sans-serif;
-    font-weight: 700;
-    transition: all .2s;
-    position: relative;
-  }
-  .option-btn:hover:not(.locked-opt) {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.1);
-    border-color: #4D96FF;
-  }
-  .option-btn.selected {
-    background: #1a1a2e;
-    color: #fff;
-    border-color: #1a1a2e;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.22);
-  }
-  .option-btn.locked-opt {
-    opacity: 0.35;
-    cursor: default;
-    pointer-events: none;
-  }
+  /* Body hidden when locked */
+  .step-body { margin-top: 14px; }
+  .step-card.locked .step-body { display: none; }
+
+  /* OPTIONS */
+  .options-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+  .option-btn { background: #f5f5f5; border: 2.5px solid #e0e0e0; border-radius: 14px; padding: 14px 8px 10px; cursor: pointer; text-align: center; font-family: 'Nunito', sans-serif; font-weight: 700; transition: all .2s; }
+  .option-btn:hover:not(.dim) { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,0.1); border-color: #4D96FF; }
+  .option-btn.selected { background: #1a1a2e; color: #fff; border-color: #1a1a2e; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.22); }
+  .option-btn.dim { opacity: 0.4; }
   .option-btn .emoji { font-size: 1.9rem; display: block; margin-bottom: 5px; }
   .option-btn .opt-name { font-size: .8rem; display: block; }
   .option-btn .opt-price { font-family: 'Fredoka One', cursive; font-size: .95rem; color: #FF6B35; display: block; margin-top: 3px; }
   .option-btn.selected .opt-price { color: #FFD93D; }
 
-  /* ROADBLOCK */
-  .roadblock-banner {
-    display: none;
-    background: linear-gradient(135deg, #ff4d4d, #ff6b35);
-    color: #fff;
-    border-radius: 14px;
-    padding: 16px 18px;
-    margin-top: 12px;
-    font-weight: 700;
-    line-height: 1.5;
-    animation: shake .4s ease;
+  /* FUNNY CONFIRMATION */
+  .confirm-banner {
+    display: none; background: linear-gradient(135deg, #4D96FF, #6a5cff); color: #fff;
+    border-radius: 14px; padding: 16px 18px; margin-top: 12px; font-weight: 700; line-height: 1.5;
+    animation: popIn .3s cubic-bezier(.34,1.56,.64,1);
   }
+  .confirm-banner.show { display: block; }
+  .confirm-msg { font-size: 1rem; margin-bottom: 12px; }
+  .confirm-choices { display: flex; gap: 10px; flex-wrap: wrap; }
+  .cf-btn { padding: 10px 18px; border-radius: 10px; border: none; cursor: pointer; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: .9rem; transition: all .18s; }
+  .cf-btn.yes { background: #fff; color: #2952cc; }
+  .cf-btn.no { background: rgba(255,255,255,0.2); color: #fff; border: 2px solid rgba(255,255,255,.6); }
+  .cf-btn:hover { transform: translateY(-2px); }
+
+  /* ROADBLOCK */
+  .roadblock-banner { display: none; background: linear-gradient(135deg, #ff4d4d, #ff6b35); color: #fff; border-radius: 14px; padding: 16px 18px; margin-top: 12px; font-weight: 700; line-height: 1.5; animation: shake .4s ease; }
   .roadblock-banner.show { display: flex; gap: 10px; align-items: flex-start; }
   .rb-icon { font-size: 1.7rem; flex-shrink: 0; }
   .rb-choices { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
-  .rb-btn {
-    padding: 9px 14px;
-    border-radius: 10px;
-    border: none;
-    cursor: pointer;
-    font-family: 'Nunito', sans-serif;
-    font-weight: 800;
-    font-size: .85rem;
-    transition: all .18s;
-  }
+  .rb-btn { padding: 9px 14px; border-radius: 10px; border: none; cursor: pointer; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: .85rem; transition: all .18s; }
   .rb-btn.pay { background: #fff; color: #e53e3e; }
   .rb-btn.back { background: rgba(255,255,255,0.25); color: #fff; border: 2px solid rgba(255,255,255,.6); }
   .rb-btn:hover { transform: translateY(-2px); }
 
-  /* CHOSEN SUMMARY LINE */
-  .chosen-summary {
-    display: none;
-    align-items: center;
-    gap: 8px;
-    margin-top: 6px;
-    font-size: .88rem;
-    font-weight: 700;
-    color: #555;
-  }
-  .chosen-summary.show { display: flex; }
-  .chosen-tag {
-    background: #1a1a2e;
-    color: #FFD93D;
-    font-family: 'Fredoka One', cursive;
-    font-size: .85rem;
-    border-radius: 8px;
-    padding: 3px 10px;
-  }
-
-  /* BUDGET SIDEBAR */
-  .budget-sidebar {
-    position: sticky;
-    top: 20px;
-    background: #1a1a2e;
-    border-radius: 18px;
-    padding: 22px 18px;
-    color: #fff;
-    box-shadow: 0 8px 28px rgba(0,0,0,0.16);
-    display: none;
-  }
+  /* SIDEBAR */
+  .budget-sidebar { position: sticky; top: 20px; background: #1a1a2e; border-radius: 18px; padding: 22px 18px; color: #fff; box-shadow: 0 8px 28px rgba(0,0,0,0.16); display: none; }
   .budget-sidebar.visible { display: block; }
-
   .sidebar-title { font-family: 'Fredoka One', cursive; font-size: 1.2rem; color: #FFD93D; text-align: center; margin-bottom: 14px; }
-
   .budget-remaining { text-align: center; margin-bottom: 16px; }
   .budget-remaining .amount { font-family: 'Fredoka One', cursive; font-size: 2.6rem; line-height: 1; transition: color .3s; }
   .budget-remaining .amount.safe { color: #6BCB77; }
   .budget-remaining .amount.warn { color: #FFD93D; }
   .budget-remaining .amount.danger { color: #FF4D4D; }
   .budget-remaining .label { font-size: .75rem; color: rgba(255,255,255,.5); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
-
   .budget-bar-wrap { background: rgba(255,255,255,.1); border-radius: 99px; height: 18px; margin-bottom: 8px; overflow: hidden; }
   .budget-bar-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #6BCB77, #FFD93D); transition: width .5s cubic-bezier(.34,1.56,.64,1), background .3s; width: 0%; }
   .budget-bar-fill.danger { background: linear-gradient(90deg, #FF6B35, #FF4D4D); }
   .budget-numbers { display: flex; justify-content: space-between; font-size: .75rem; color: rgba(255,255,255,.45); margin-bottom: 16px; }
-
   .line-items { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
-  .line-item {
-    display: flex; justify-content: space-between; align-items: center;
-    font-size: .84rem; padding: 7px 9px; border-radius: 9px;
-    background: rgba(255,255,255,.07);
-    opacity: 0; transform: translateY(5px);
-    transition: opacity .3s, transform .3s;
-  }
-  .line-item.show { opacity: 1; transform: translateY(0); }
+  .line-item { display: flex; justify-content: space-between; align-items: center; font-size: .84rem; padding: 7px 9px; border-radius: 9px; background: rgba(255,255,255,.07); }
   .li-name { color: rgba(255,255,255,.8); font-weight: 600; }
   .li-cost { font-family: 'Fredoka One', cursive; color: #FFD93D; }
-
   .divider { border: none; border-top: 1px solid rgba(255,255,255,.12); margin: 8px 0; }
   .total-line { display: flex; justify-content: space-between; font-family: 'Fredoka One', cursive; font-size: 1.05rem; color: #fff; padding: 0 3px; }
-
-  /* ROADBLOCK ANNOUNCEMENT in sidebar */
-  .rb-announce {
-    display: none;
-    background: rgba(255,77,77,0.18);
-    border: 1px solid rgba(255,77,77,0.4);
-    border-radius: 10px;
-    padding: 10px 12px;
-    font-size: .82rem;
-    font-weight: 700;
-    color: #FF8080;
-    margin-top: 10px;
-    text-align: center;
-  }
+  .rb-announce { display: none; background: rgba(255,77,77,0.18); border: 1px solid rgba(255,77,77,0.4); border-radius: 10px; padding: 10px 12px; font-size: .82rem; font-weight: 700; color: #FF8080; margin-top: 10px; text-align: center; }
   .rb-announce.show { display: block; }
-
-  /* STATUS */
-  .status-box {
-    display: none; margin-top: 14px; padding: 14px;
-    border-radius: 14px; text-align: center;
-    font-weight: 800; font-size: .95rem; line-height: 1.5;
-    animation: popIn .4s cubic-bezier(.34,1.56,.64,1);
-  }
+  .status-box { display: none; margin-top: 14px; padding: 14px; border-radius: 14px; text-align: center; font-weight: 800; font-size: .95rem; line-height: 1.5; animation: popIn .4s cubic-bezier(.34,1.56,.64,1); }
   .status-box.show { display: block; }
   .status-box.crash { background: linear-gradient(135deg, #FF4D4D, #FF6B35); color: #fff; }
   .status-box.success { background: linear-gradient(135deg, #6BCB77, #3dab4e); color: #fff; }
-
-  .action-btn {
-    width: 100%; margin-top: 12px; padding: 11px;
-    border-radius: 11px; border: none;
-    background: #FFD93D; color: #1a1a2e;
-    font-family: 'Fredoka One', cursive; font-size: 1rem;
-    cursor: pointer; display: none; transition: transform .18s;
-  }
+  .action-btn { width: 100%; margin-top: 12px; padding: 11px; border-radius: 11px; border: none; background: #FFD93D; color: #1a1a2e; font-family: 'Fredoka One', cursive; font-size: 1rem; cursor: pointer; display: none; transition: transform .18s; }
   .action-btn.show { display: block; }
   .action-btn:hover { transform: scale(1.04); }
-
-  /* END SCREENS */
-  #end-screen {
-    display: none;
-    background: #fff;
-    border-radius: 20px;
-    padding: 36px 30px;
-    text-align: center;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    grid-column: 1 / -1;
-    animation: popIn .5s cubic-bezier(.34,1.56,.64,1);
-  }
-  #end-screen.show { display: block; }
-  #end-screen .end-emoji { font-size: 4rem; margin-bottom: 12px; }
-  #end-screen h2 { font-family: 'Fredoka One', cursive; font-size: 2rem; margin-bottom: 10px; }
-  #end-screen p { color: #555; font-size: 1rem; font-weight: 600; line-height: 1.6; max-width: 480px; margin: 0 auto 8px; }
-  #end-screen .end-summary { background: #f7f7f7; border-radius: 12px; padding: 14px 18px; margin: 16px auto; max-width: 400px; text-align: left; }
-  #end-screen .end-summary .es-row { display: flex; justify-content: space-between; font-size: .9rem; font-weight: 700; padding: 4px 0; color: #444; border-bottom: 1px solid #eee; }
-  #end-screen .end-summary .es-row:last-child { border-bottom: none; color: #1a1a2e; }
-  #end-screen .play-again-btn {
-    background: #1a1a2e; color: #FFD93D;
-    font-family: 'Fredoka One', cursive; font-size: 1.3rem;
-    border: none; border-radius: 14px; padding: 14px 40px;
-    cursor: pointer; margin-top: 16px;
-    transition: transform .18s, box-shadow .18s;
-  }
-  #end-screen .play-again-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
 
   @keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-6px)} 40%,80%{transform:translateX(6px)} }
   @keyframes popIn { from{transform:scale(0.85);opacity:0} to{transform:scale(1);opacity:1} }
@@ -310,9 +147,8 @@
 <h1 class="title">🎉 Party Planner Challenge</h1>
 <p class="subtitle">Plan the perfect party for 15 kids — stay under $250!</p>
 
-<div class="layout" id="main-layout">
+<div class="layout">
 
-  <!-- WELCOME -->
   <div id="welcome-screen">
     <div class="big-emoji">🎈</div>
     <h2>Your Mission</h2>
@@ -320,7 +156,6 @@
     <button class="start-btn" onclick="startGame()">Let's Plan! 🚀</button>
   </div>
 
-  <!-- STEPS (hidden until game starts) -->
   <div class="steps-panel" id="steps-panel" style="display:none">
 
     <!-- STEP 1: VENUE -->
@@ -331,29 +166,16 @@
           <div class="step-title">🏠 Choose Your Venue</div>
           <div class="step-sub">Where is the party happening?</div>
         </div>
+        <div class="locked-pick"><span class="locked-tag" id="tag-venue"></span><span class="locked-cost" id="cost-venue"></span></div>
       </div>
-      <div class="options-grid" id="venue-opts">
-        <button class="option-btn" data-key="backyard" data-cost="0" data-label="🏡 Backyard" onclick="pick('venue',this)">
-          <span class="emoji">🏡</span><span class="opt-name">Backyard</span><span class="opt-price">FREE</span>
-        </button>
-        <button class="option-btn" data-key="pavilion" data-cost="25" data-label="⛺ Park Pavilion" onclick="pick('venue',this)">
-          <span class="emoji">⛺</span><span class="opt-name">Park Pavilion</span><span class="opt-price">$25</span>
-        </button>
-        <button class="option-btn" data-key="hall" data-cost="125" data-label="🏛️ Rented Hall" onclick="pick('venue',this)">
-          <span class="emoji">🏛️</span><span class="opt-name">Rented Hall</span><span class="opt-price">$125</span>
-        </button>
-      </div>
-      <div class="chosen-summary" id="chosen-venue"></div>
-      <div class="roadblock-banner" id="rb-storm">
-        <div class="rb-icon">⛈️</div>
-        <div>
-          <strong>ROADBLOCK: Unexpected Storm!</strong><br>
-          A storm is forecast! Since you chose the <strong>Backyard</strong>, you must spend an emergency <strong>$50</strong> to rent a pop-up tent — or switch venue.
-          <div class="rb-choices">
-            <button class="rb-btn pay" onclick="payTent()">💸 Pay $50 for Tent</button>
-            <button class="rb-btn back" onclick="resetVenue()">🔄 Pick Different Venue</button>
-          </div>
+      <div class="step-body">
+        <div class="options-grid" id="venue-opts">
+          <button class="option-btn" data-key="backyard" data-cost="0" data-label="🏡 Backyard" onclick="pick('venue',this)"><span class="emoji">🏡</span><span class="opt-name">Backyard</span><span class="opt-price">FREE</span></button>
+          <button class="option-btn" data-key="pavilion" data-cost="25" data-label="⛺ Park Pavilion" onclick="pick('venue',this)"><span class="emoji">⛺</span><span class="opt-name">Park Pavilion</span><span class="opt-price">$25</span></button>
+          <button class="option-btn" data-key="hall" data-cost="125" data-label="🏛️ Rented Hall" onclick="pick('venue',this)"><span class="emoji">🏛️</span><span class="opt-name">Rented Hall</span><span class="opt-price">$125</span></button>
         </div>
+        <div class="confirm-banner" id="confirm-venue"><div class="confirm-msg" id="cmsg-venue"></div><div class="confirm-choices"><button class="cf-btn yes" onclick="confirmChoice('venue')">✅ Yes, lock it in!</button><button class="cf-btn no" onclick="cancelConfirm('venue')">🤔 Let me rethink</button></div></div>
+        <div class="roadblock-banner" id="rb-storm"><div class="rb-icon">⛈️</div><div><strong>ROADBLOCK: Unexpected Storm!</strong><br>A storm is forecast! Since you chose the <strong>Backyard</strong>, you must spend an emergency <strong>$50</strong> on a pop-up tent — or switch venue.<div class="rb-choices"><button class="rb-btn pay" onclick="payTent()">💸 Pay $50 for Tent</button><button class="rb-btn back" onclick="reopenVenue()">🔄 Pick Different Venue</button></div></div></div>
       </div>
     </div>
 
@@ -365,29 +187,16 @@
           <div class="step-title">🍽️ Choose Your Food</div>
           <div class="step-sub">Lunch for all 15 kids</div>
         </div>
+        <div class="locked-pick"><span class="locked-tag" id="tag-food"></span><span class="locked-cost" id="cost-food"></span></div>
       </div>
-      <div class="options-grid" id="food-opts">
-        <button class="option-btn" data-key="pizza" data-cost="50" data-label="🍕 Pizza" onclick="pick('food',this)">
-          <span class="emoji">🍕</span><span class="opt-name">Pizza</span><span class="opt-price">$50</span>
-        </button>
-        <button class="option-btn" data-key="tacos" data-cost="55" data-label="🌮 Tacos" onclick="pick('food',this)">
-          <span class="emoji">🌮</span><span class="opt-name">Tacos</span><span class="opt-price">$55</span>
-        </button>
-        <button class="option-btn" data-key="samosas" data-cost="60" data-label="🥟 Samosas" onclick="pick('food',this)">
-          <span class="emoji">🥟</span><span class="opt-name">Samosas</span><span class="opt-price">$60</span>
-        </button>
-      </div>
-      <div class="chosen-summary" id="chosen-food"></div>
-      <div class="roadblock-banner" id="rb-pizza">
-        <div class="rb-icon">🚫</div>
-        <div>
-          <strong>ROADBLOCK: Pizza Sold Out!</strong><br>
-          The pizza place ran out of dough! Individual pizzas now cost <strong>$130</strong> instead of $50. Can your budget handle it?
-          <div class="rb-choices">
-            <button class="rb-btn pay" onclick="payExpensivePizza()">💸 Pay $130 Anyway</button>
-            <button class="rb-btn back" onclick="resetFood()">🔄 Pick Different Food</button>
-          </div>
+      <div class="step-body">
+        <div class="options-grid" id="food-opts">
+          <button class="option-btn" data-key="pizza" data-cost="50" data-label="🍕 Pizza" onclick="pick('food',this)"><span class="emoji">🍕</span><span class="opt-name">Pizza</span><span class="opt-price">$50</span></button>
+          <button class="option-btn" data-key="tacos" data-cost="55" data-label="🌮 Tacos" onclick="pick('food',this)"><span class="emoji">🌮</span><span class="opt-name">Tacos</span><span class="opt-price">$55</span></button>
+          <button class="option-btn" data-key="samosas" data-cost="60" data-label="🥟 Samosas" onclick="pick('food',this)"><span class="emoji">🥟</span><span class="opt-name">Samosas</span><span class="opt-price">$60</span></button>
         </div>
+        <div class="confirm-banner" id="confirm-food"><div class="confirm-msg" id="cmsg-food"></div><div class="confirm-choices"><button class="cf-btn yes" onclick="confirmChoice('food')">✅ Yes, lock it in!</button><button class="cf-btn no" onclick="cancelConfirm('food')">🤔 Let me rethink</button></div></div>
+        <div class="roadblock-banner" id="rb-pizza"><div class="rb-icon">🚫</div><div><strong>ROADBLOCK: Pizza Sold Out!</strong><br>The pizza place ran out of dough! Individual pizzas now cost <strong>$130</strong> instead of $50. Can your budget handle it?<div class="rb-choices"><button class="rb-btn pay" onclick="payExpensivePizza()">💸 Pay $130 Anyway</button><button class="rb-btn back" onclick="reopenFood()">🔄 Pick Different Food</button></div></div></div>
       </div>
     </div>
 
@@ -399,19 +208,16 @@
           <div class="step-title">🎶 Choose Entertainment</div>
           <div class="step-sub">Keep 15 kids entertained!</div>
         </div>
+        <div class="locked-pick"><span class="locked-tag" id="tag-entertain"></span><span class="locked-cost" id="cost-entertain"></span></div>
       </div>
-      <div class="options-grid" id="entertain-opts">
-        <button class="option-btn" data-key="movie" data-cost="0" data-label="🎬 Projected Movie" onclick="pick('entertain',this)">
-          <span class="emoji">🎬</span><span class="opt-name">Projected Movie</span><span class="opt-price">FREE</span>
-        </button>
-        <button class="option-btn" data-key="dj" data-cost="15" data-label="🎧 Spotify DJ" onclick="pick('entertain',this)">
-          <span class="emoji">🎧</span><span class="opt-name">Spotify DJ</span><span class="opt-price">$15</span>
-        </button>
-        <button class="option-btn" data-key="foam" data-cost="250" data-label="🫧 Foam Party" onclick="pick('entertain',this)">
-          <span class="emoji">🫧</span><span class="opt-name">Foam Party</span><span class="opt-price">$250</span>
-        </button>
+      <div class="step-body">
+        <div class="options-grid" id="entertain-opts">
+          <button class="option-btn" data-key="movie" data-cost="0" data-label="🎬 Projected Movie" onclick="pick('entertain',this)"><span class="emoji">🎬</span><span class="opt-name">Projected Movie</span><span class="opt-price">FREE</span></button>
+          <button class="option-btn" data-key="dj" data-cost="15" data-label="🎧 Spotify DJ" onclick="pick('entertain',this)"><span class="emoji">🎧</span><span class="opt-name">Spotify DJ</span><span class="opt-price">$15</span></button>
+          <button class="option-btn" data-key="foam" data-cost="250" data-label="🫧 Foam Party" onclick="pick('entertain',this)"><span class="emoji">🫧</span><span class="opt-name">Foam Party</span><span class="opt-price">$250</span></button>
+        </div>
+        <div class="confirm-banner" id="confirm-entertain"><div class="confirm-msg" id="cmsg-entertain"></div><div class="confirm-choices"><button class="cf-btn yes" onclick="confirmChoice('entertain')">✅ Yes, lock it in!</button><button class="cf-btn no" onclick="cancelConfirm('entertain')">🤔 Let me rethink</button></div></div>
       </div>
-      <div class="chosen-summary" id="chosen-entertain"></div>
     </div>
 
     <!-- STEP 4: SNACKS -->
@@ -422,52 +228,36 @@
           <div class="step-title">🍿 Choose Snacks</div>
           <div class="step-sub">Final stretch!</div>
         </div>
+        <div class="locked-pick"><span class="locked-tag" id="tag-snacks"></span><span class="locked-cost" id="cost-snacks"></span></div>
       </div>
-      <div class="options-grid" id="snack-opts">
-        <button class="option-btn" data-key="standard" data-cost="40" data-label="🛍️ Standard Pack" onclick="pick('snacks',this)">
-          <span class="emoji">🛍️</span><span class="opt-name">Standard Pack</span><span class="opt-price">$40</span>
-        </button>
-        <button class="option-btn" data-key="hype" data-cost="48" data-label="🍭 Hype Monster Pack" onclick="pick('snacks',this)">
-          <span class="emoji">🍭</span><span class="opt-name">Hype Monster Pack</span><span class="opt-price">$48</span>
-        </button>
-      </div>
-      <div class="chosen-summary" id="chosen-snacks"></div>
-      <div class="roadblock-banner" id="rb-hype">
-        <div class="rb-icon">📱</div>
-        <div>
-          <strong>ROADBLOCK: The Hype Meter!</strong><br>
-          Everyone's buzzing! Add the Premium Candy upgrade for <strong>$10</strong> to max the hype — or stay strong and save!
-          <div class="rb-choices">
-            <button class="rb-btn pay" onclick="payHype()">🍬 Pay $10 for Hype</button>
-            <button class="rb-btn back" onclick="skipHype()">💪 Stay Strong</button>
-          </div>
+      <div class="step-body">
+        <div class="options-grid" id="snacks-opts">
+          <button class="option-btn" data-key="standard" data-cost="40" data-label="🛍️ Standard Pack" onclick="pick('snacks',this)"><span class="emoji">🛍️</span><span class="opt-name">Standard Pack</span><span class="opt-price">$40</span></button>
+          <button class="option-btn" data-key="hype" data-cost="48" data-label="🍭 Hype Monster Pack" onclick="pick('snacks',this)"><span class="emoji">🍭</span><span class="opt-name">Hype Monster Pack</span><span class="opt-price">$48</span></button>
         </div>
+        <div class="confirm-banner" id="confirm-snacks"><div class="confirm-msg" id="cmsg-snacks"></div><div class="confirm-choices"><button class="cf-btn yes" onclick="confirmChoice('snacks')">✅ Yes, lock it in!</button><button class="cf-btn no" onclick="cancelConfirm('snacks')">🤔 Let me rethink</button></div></div>
+        <div class="roadblock-banner" id="rb-hype"><div class="rb-icon">📱</div><div><strong>ROADBLOCK: The Hype Meter!</strong><br>Everyone's buzzing! Add the Premium Candy upgrade for <strong>$10</strong> to max the hype — or stay strong and save!<div class="rb-choices"><button class="rb-btn pay" onclick="payHype()">🍬 Pay $10 for Hype</button><button class="rb-btn back" onclick="skipHype()">💪 Stay Strong</button></div></div></div>
       </div>
     </div>
 
   </div>
 
-  <!-- BUDGET SIDEBAR -->
+  <!-- SIDEBAR -->
   <div class="budget-sidebar" id="budget-sidebar">
     <div class="sidebar-title">💰 Budget Tracker</div>
-    <div class="budget-remaining">
-      <div class="amount safe" id="rem-amount">$250</div>
-      <div class="label">Remaining</div>
-    </div>
+    <div class="budget-remaining"><div class="amount safe" id="rem-amount">$250</div><div class="label">Remaining</div></div>
     <div class="budget-bar-wrap"><div class="budget-bar-fill" id="bbar"></div></div>
     <div class="budget-numbers"><span>$0 spent</span><span>$250 total</span></div>
     <div class="line-items" id="line-items"></div>
     <hr class="divider" id="tot-div" style="display:none">
-    <div class="total-line" id="tot-line" style="display:none">
-      <span>Total Spent</span><span id="tot-spent">$0</span>
-    </div>
+    <div class="total-line" id="tot-line" style="display:none"><span>Total Spent</span><span id="tot-spent">$0</span></div>
     <div class="rb-announce" id="rb-announce"></div>
     <div class="status-box crash" id="st-crash"></div>
     <div class="status-box success" id="st-success"></div>
     <button class="action-btn" id="end-btn" onclick="showEndScreen()"></button>
   </div>
 
-  <!-- END SCREEN -->
+  <!-- END -->
   <div id="end-screen">
     <div class="end-emoji" id="end-emoji"></div>
     <h2 id="end-title"></h2>
@@ -480,357 +270,249 @@
 
 <script>
 const BUDGET = 250;
+const ORDER = ['venue','food','entertain','snacks'];
 
-// Which roadblock fires this game (0=storm, 1=pizza, 2=hype)
-let activeRoadblock = -1;
-
-const state = {
-  venue: null, venueLabel: '', venueCost: 0,
-  tentPaid: false,
-  food: null, foodLabel: '', foodCost: 0,
-  expensivePizza: false,
-  entertain: null, entertainLabel: '', entertainCost: 0,
-  snacks: null, snacksLabel: '', snacksCost: 0,
-  hypePaid: false,
-  phase: 'venue',   // venue | food | entertain | snacks | done
-  crashed: false
+// Funny confirmation messages keyed by choice
+const FUNNY = {
+  backyard: "🏡 The backyard it is! Free, but fingers crossed the weather behaves... Lock it in?",
+  pavilion: "⛺ Park pavilion — shelter AND style for $25. Smart! Confirm this pick?",
+  hall: "🏛️ Fancy! The rented hall gobbles up $125 of your budget. You sure about this?",
+  pizza: "🍕 Pizza — a guaranteed crowd-pleaser! Lock it in?",
+  tacos: "🌮 Let's taco 'bout a tasty choice! Confirm?",
+  samosas: "🥟 Samosas! Crispy, golden, delicious. You sure?",
+  movie: "🎬 Movie night — and it's totally FREE! Confirm?",
+  dj: "🎧 DJ dance party for $15! Time to boogie. Lock it in?",
+  foam: "🫧 A FOAM PARTY?! That's $250 of pure bubbles... are you REALLY sure?? 😳",
+  standard: "🛍️ Standard snack pack — safe and solid. Confirm?",
+  hype: "🍭 Hype Monster Pack with extra candy! You sure?"
 };
 
-function totalSpent() {
-  return state.venueCost + (state.tentPaid ? 50 : 0) +
-         state.foodCost + state.entertainCost +
-         state.snacksCost + (state.hypePaid ? 10 : 0);
+let activeRoadblock = -1; // 0=storm, 1=pizza, 2=hype
+
+const state = {
+  venue:null, venueLabel:'', venueCost:0, tentPaid:false,
+  food:null, foodLabel:'', foodCost:0, expensivePizza:false,
+  entertain:null, entertainLabel:'', entertainCost:0,
+  snacks:null, snacksLabel:'', snacksCost:0, hypePaid:false,
+  phase:'venue', crashed:false
+};
+// pending choice (before confirm) per step
+const pending = {};
+
+function totalSpent(){
+  return state.venueCost + (state.tentPaid?50:0) + state.foodCost +
+         state.entertainCost + state.snacksCost + (state.hypePaid?10:0);
 }
 
-function startGame() {
-  // Pick one random roadblock for this game
-  activeRoadblock = Math.floor(Math.random() * 3); // 0,1,2
-  document.getElementById('welcome-screen').style.display = 'none';
-  document.getElementById('end-screen').className = '';
-  document.getElementById('steps-panel').style.display = 'flex';
-  document.getElementById('budget-sidebar').className = 'budget-sidebar visible';
-  showStep('venue');
+function startGame(){
+  activeRoadblock = Math.floor(Math.random()*3);
+  document.getElementById('welcome-screen').style.display='none';
+  document.getElementById('end-screen').className='';
+  document.getElementById('steps-panel').style.display='flex';
+  document.getElementById('budget-sidebar').className='budget-sidebar visible';
+  openStep('venue');
   updateSidebar();
 }
 
-function showStep(stepKey) {
-  const el = document.getElementById('step-' + stepKey);
-  el.className = 'step-card visible current';
-  el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+function openStep(step){
+  const el=document.getElementById('step-'+step);
+  el.className='step-card visible current';
+  el.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
-function lockStep(stepKey) {
-  const el = document.getElementById('step-' + stepKey);
-  el.className = 'step-card visible done';
-  // Mark number done
-  const num = document.getElementById('num-' + stepKey);
-  num.className = 'step-num done-num';
-  num.textContent = '✓';
-  // Lock all buttons
-  document.querySelectorAll('#' + el.id + ' .option-btn').forEach(b => {
-    if (!b.classList.contains('selected')) b.classList.add('locked-opt');
-    b.onclick = null;
-  });
-}
-
-function showChosenSummary(stepKey, label, cost) {
-  const el = document.getElementById('chosen-' + stepKey);
-  el.innerHTML = `<span>Chosen:</span> <span class="chosen-tag">${label}</span> <span style="color:#FF6B35;font-family:'Fredoka One',cursive">${cost === 0 ? 'FREE' : '$' + cost}</span>`;
-  el.className = 'chosen-summary show';
-}
-
-// ── PICK ──
-function pick(step, btn) {
-  if (state.phase !== step) return;
-
-  const key = btn.dataset.key;
-  const cost = parseInt(btn.dataset.cost);
-  const label = btn.dataset.label;
-
-  // Visually select
-  document.querySelectorAll('#' + step + '-opts .option-btn').forEach(b => b.classList.remove('selected'));
+// ── PICK (shows funny confirmation; can re-pick) ──
+function pick(step,btn){
+  if(state.phase!==step) return;
+  const key=btn.dataset.key, cost=parseInt(btn.dataset.cost), label=btn.dataset.label;
+  pending[step]={key,cost,label};
+  // highlight
+  document.querySelectorAll('#'+step+'-opts .option-btn').forEach(b=>b.classList.remove('selected'));
   btn.classList.add('selected');
-
-  if (step === 'venue') handleVenue(key, cost, label);
-  else if (step === 'food') handleFood(key, cost, label);
-  else if (step === 'entertain') handleEntertain(key, cost, label);
-  else if (step === 'snacks') handleSnacks(key, cost, label);
+  // show funny confirmation
+  document.getElementById('cmsg-'+step).textContent = FUNNY[key];
+  document.getElementById('confirm-'+step).className='confirm-banner show';
 }
 
-// ── VENUE ──
-function handleVenue(key, cost, label) {
-  state.venue = key; state.venueCost = cost; state.venueLabel = label;
-  state.tentPaid = false;
+function cancelConfirm(step){
+  document.getElementById('confirm-'+step).className='confirm-banner';
+  document.querySelectorAll('#'+step+'-opts .option-btn').forEach(b=>b.classList.remove('selected'));
+  pending[step]=null;
+}
+
+// ── CONFIRM ──
+function confirmChoice(step){
+  const p=pending[step];
+  if(!p) return;
+  document.getElementById('confirm-'+step).className='confirm-banner';
+
+  // commit to state
+  if(step==='venue'){ state.venue=p.key; state.venueCost=p.cost; state.venueLabel=p.label; state.tentPaid=false; }
+  else if(step==='food'){ state.food=p.key; state.foodCost=p.cost; state.foodLabel=p.label; state.expensivePizza=false; }
+  else if(step==='entertain'){ state.entertain=p.key; state.entertainCost=p.cost; state.entertainLabel=p.label; }
+  else if(step==='snacks'){ state.snacks=p.key; state.snacksCost=p.cost; state.snacksLabel=p.label; state.hypePaid=false; }
   updateSidebar();
 
-  // Storm roadblock = index 0, only fires for backyard
-  if (activeRoadblock === 0 && key === 'backyard') {
+  // roadblock checks
+  if(step==='venue' && activeRoadblock===0 && p.key==='backyard'){
     announceRoadblock('⛈️ Storm incoming!');
-    document.getElementById('rb-storm').className = 'roadblock-banner show';
-    return; // don't advance yet
+    document.getElementById('rb-storm').className='roadblock-banner show';
+    return;
   }
-  lockAndAdvance('venue', label, cost, 'food');
-}
-
-function payTent() {
-  state.tentPaid = true;
-  document.getElementById('rb-storm').className = 'roadblock-banner';
-  clearRBAnnounce();
-  lockAndAdvance('venue', state.venueLabel, state.venueCost, 'food');
-  updateSidebar();
-}
-
-function resetVenue() {
-  document.getElementById('rb-storm').className = 'roadblock-banner';
-  document.querySelectorAll('#venue-opts .option-btn').forEach(b => b.classList.remove('selected'));
-  clearRBAnnounce();
-  state.venue = null; state.venueCost = 0; state.venueLabel = '';
-  updateSidebar();
-}
-
-// ── FOOD ──
-function handleFood(key, cost, label) {
-  state.food = key; state.foodCost = cost; state.foodLabel = label;
-  state.expensivePizza = false;
-  updateSidebar();
-
-  // Pizza roadblock = index 1, only fires for pizza
-  if (activeRoadblock === 1 && key === 'pizza') {
+  if(step==='food' && activeRoadblock===1 && p.key==='pizza'){
     announceRoadblock('🚫 Pizza sold out!');
-    document.getElementById('rb-pizza').className = 'roadblock-banner show';
+    document.getElementById('rb-pizza').className='roadblock-banner show';
     return;
   }
-  lockAndAdvance('food', label, cost, 'entertain');
-}
-
-function payExpensivePizza() {
-  state.expensivePizza = true;
-  state.foodCost = 130;
-  state.foodLabel = '🍕 Individual Pizzas';
-  document.getElementById('rb-pizza').className = 'roadblock-banner';
-  clearRBAnnounce();
-  showChosenSummary('food', '🍕 Individual Pizzas', 130);
-  lockStep('food');
-  state.phase = 'entertain';
-  showStep('entertain');
-  updateSidebar();
-  checkCrash();
-}
-
-function resetFood() {
-  document.getElementById('rb-pizza').className = 'roadblock-banner';
-  document.querySelectorAll('#food-opts .option-btn').forEach(b => b.classList.remove('selected'));
-  clearRBAnnounce();
-  state.food = null; state.foodCost = 0; state.foodLabel = '';
-  updateSidebar();
-}
-
-// ── ENTERTAIN ──
-function handleEntertain(key, cost, label) {
-  state.entertain = key; state.entertainCost = cost; state.entertainLabel = label;
-  showChosenSummary('entertain', label, cost);
-  lockStep('entertain');
-  state.phase = 'snacks';
-  showStep('snacks');
-  updateSidebar();
-  checkCrash();
-}
-
-// ── SNACKS ──
-function handleSnacks(key, cost, label) {
-  state.snacks = key; state.snacksCost = cost; state.snacksLabel = label;
-  updateSidebar();
-
-  // Hype roadblock = index 2, only fires for hype pack
-  if (activeRoadblock === 2 && key === 'hype') {
+  if(step==='snacks' && activeRoadblock===2 && p.key==='hype'){
     announceRoadblock('📱 Hype Meter incoming!');
-    document.getElementById('rb-hype').className = 'roadblock-banner show';
+    document.getElementById('rb-hype').className='roadblock-banner show';
     return;
   }
-  lockAndAdvance('snacks', label, cost, 'done');
+  lockAndAdvance(step);
 }
 
-function payHype() {
-  state.hypePaid = true;
-  document.getElementById('rb-hype').className = 'roadblock-banner';
-  clearRBAnnounce();
-  lockAndAdvance('snacks', state.snacksLabel, state.snacksCost, 'done');
+// ── ROADBLOCK actions ──
+function payTent(){ state.tentPaid=true; document.getElementById('rb-storm').className='roadblock-banner'; clearRBAnnounce(); lockAndAdvance('venue'); updateSidebar(); }
+function reopenVenue(){
+  document.getElementById('rb-storm').className='roadblock-banner'; clearRBAnnounce();
+  document.querySelectorAll('#venue-opts .option-btn').forEach(b=>b.classList.remove('selected'));
+  state.venue=null; state.venueCost=0; state.venueLabel=''; state.tentPaid=false; pending.venue=null;
   updateSidebar();
 }
-
-function skipHype() {
-  document.getElementById('rb-hype').className = 'roadblock-banner';
-  clearRBAnnounce();
-  lockAndAdvance('snacks', state.snacksLabel, state.snacksCost, 'done');
+function payExpensivePizza(){
+  state.expensivePizza=true; state.foodCost=130; state.foodLabel='🍕 Individual Pizzas';
+  document.getElementById('rb-pizza').className='roadblock-banner'; clearRBAnnounce();
+  lockAndAdvance('food'); updateSidebar();
+}
+function reopenFood(){
+  document.getElementById('rb-pizza').className='roadblock-banner'; clearRBAnnounce();
+  document.querySelectorAll('#food-opts .option-btn').forEach(b=>b.classList.remove('selected'));
+  state.food=null; state.foodCost=0; state.foodLabel=''; state.expensivePizza=false; pending.food=null;
   updateSidebar();
 }
+function payHype(){ state.hypePaid=true; document.getElementById('rb-hype').className='roadblock-banner'; clearRBAnnounce(); lockAndAdvance('snacks'); updateSidebar(); }
+function skipHype(){ document.getElementById('rb-hype').className='roadblock-banner'; clearRBAnnounce(); lockAndAdvance('snacks'); updateSidebar(); }
 
-// ── HELPERS ──
-function lockAndAdvance(stepKey, label, cost, nextPhase) {
-  // Cost shown in summary: use actual state cost (may differ for tent/pizza)
-  const displayCost = stepKey === 'venue' ? state.venueCost : cost;
-  showChosenSummary(stepKey, label, displayCost);
-  lockStep(stepKey);
-  state.phase = nextPhase;
-  if (nextPhase !== 'done') {
-    showStep(nextPhase);
+// ── LOCK & ADVANCE ──
+function lockAndAdvance(step){
+  const el=document.getElementById('step-'+step);
+  el.className='step-card visible locked';
+  const num=document.getElementById('num-'+step); num.className='step-num done-num'; num.textContent='✓';
+  // header summary
+  const cost = step==='venue'?state.venueCost : step==='food'?state.foodCost : step==='entertain'?state.entertainCost : state.snacksCost;
+  const label = step==='venue'?state.venueLabel : step==='food'?state.foodLabel : step==='entertain'?state.entertainLabel : state.snacksLabel;
+  document.getElementById('tag-'+step).textContent=label;
+  document.getElementById('cost-'+step).textContent = cost===0?'FREE':'$'+cost;
+
+  // advance
+  const idx=ORDER.indexOf(step);
+  if(idx < ORDER.length-1){
+    const next=ORDER[idx+1];
+    state.phase=next;
+    openStep(next);
+    checkCrash();
   } else {
-    finalize();
+    state.phase='done';
+    updateSidebar();
+    checkCrash();
+    if(!state.crashed) showSuccess();
   }
 }
 
-function finalize() {
-  state.phase = 'done';
-  updateSidebar();
-  checkCrash();
-}
-
-function checkCrash() {
-  const spent = totalSpent();
-  if (spent > BUDGET) {
-    state.crashed = true;
-    state.phase = 'done';
-    // Show crash in sidebar
-    const crashEl = document.getElementById('st-crash');
-    crashEl.textContent = '💥 Budget Crashed! You went $' + (spent - BUDGET) + ' over!';
-    crashEl.className = 'status-box crash show';
-    const endBtn = document.getElementById('end-btn');
-    endBtn.textContent = '💥 See What Happened';
-    endBtn.className = 'action-btn show';
-    // Lock any remaining open steps
-    ['venue','food','entertain','snacks'].forEach(s => {
-      const card = document.getElementById('step-' + s);
-      if (card.classList.contains('current')) {
-        card.className = 'step-card visible done';
-        document.querySelectorAll('#' + card.id + ' .option-btn').forEach(b => { b.classList.add('locked-opt'); b.onclick = null; });
-      }
-    });
+function checkCrash(){
+  const spent=totalSpent();
+  if(spent>BUDGET){
+    state.crashed=true; state.phase='done';
+    const c=document.getElementById('st-crash');
+    c.textContent='💥 Budget Crashed! You went $'+(spent-BUDGET)+' over!';
+    c.className='status-box crash show';
+    const eb=document.getElementById('end-btn'); eb.textContent='💥 See What Happened'; eb.className='action-btn show';
+    // lock the current open step so they can't keep playing
+    const cur=document.querySelector('.step-card.current');
+    if(cur){ cur.className='step-card visible locked'; }
   }
 }
 
-function showEndScreen() {
-  const spent = totalSpent();
-  const remaining = BUDGET - spent;
-  const crashed = spent > BUDGET;
+function showSuccess(){
+  const s=document.getElementById('st-success');
+  s.textContent='🎉 All done! Under budget!';
+  s.className='status-box success show';
+  const eb=document.getElementById('end-btn'); eb.textContent='🎉 See Your Results!'; eb.className='action-btn show';
+}
 
-  // Hide game UI
-  document.getElementById('steps-panel').style.display = 'none';
-  document.getElementById('budget-sidebar').className = 'budget-sidebar';
-  document.getElementById('end-screen').className = 'show';
-
-  document.getElementById('end-emoji').textContent = crashed ? '💥' : '🎉';
-  document.getElementById('end-title').textContent = crashed ? 'Budget Crashed!' : 'Party Success!';
-  document.getElementById('end-msg').textContent = crashed
-    ? 'Your party went $' + (spent - BUDGET) + ' over budget! The bank declined your card and the music stopped. Try again with smarter choices!'
+function showEndScreen(){
+  const spent=totalSpent(), remaining=BUDGET-spent, crashed=spent>BUDGET;
+  document.getElementById('steps-panel').style.display='none';
+  document.getElementById('budget-sidebar').className='budget-sidebar';
+  document.getElementById('end-screen').className='show';
+  document.getElementById('end-emoji').textContent=crashed?'💥':'🎉';
+  document.getElementById('end-title').textContent=crashed?'Budget Crashed!':'Party Success!';
+  document.getElementById('end-msg').textContent=crashed
+    ? 'Your party went $'+(spent-BUDGET)+' over budget! The bank declined your card and the music stopped. Try again with smarter choices!'
     : 'Incredible! You hosted a party for 15 kids, tackled real-world surprises, and kept costs under $250. You\'re a budgeting master!';
-
-  // Build summary
-  const items = [];
-  if (state.venueLabel) items.push([state.venueLabel, state.venueCost]);
-  if (state.tentPaid)   items.push(['⛺ Emergency Tent', 50]);
-  if (state.foodLabel)  items.push([state.foodLabel, state.foodCost]);
-  if (state.entertainLabel) items.push([state.entertainLabel, state.entertainCost]);
-  if (state.snacksLabel) items.push([state.snacksLabel, state.snacksCost]);
-  if (state.hypePaid)   items.push(['🍬 Premium Candy', 10]);
-
-  let html = '';
-  items.forEach(([n, c]) => {
-    html += `<div class="es-row"><span>${n}</span><span>${c === 0 ? 'FREE' : '$' + c}</span></div>`;
-  });
-  html += `<div class="es-row"><span>Total Spent</span><span style="color:${crashed?'#e53e3e':'#3dab4e'}">$${spent}</span></div>`;
-  if (!crashed) html += `<div class="es-row"><span>Money Saved</span><span style="color:#3dab4e">$${remaining}</span></div>`;
-  document.getElementById('end-summary').innerHTML = html;
+  const items=[];
+  if(state.venueLabel) items.push([state.venueLabel,state.venueCost]);
+  if(state.tentPaid) items.push(['⛺ Emergency Tent',50]);
+  if(state.foodLabel) items.push([state.foodLabel,state.foodCost]);
+  if(state.entertainLabel) items.push([state.entertainLabel,state.entertainCost]);
+  if(state.snacksLabel) items.push([state.snacksLabel,state.snacksCost]);
+  if(state.hypePaid) items.push(['🍬 Premium Candy',10]);
+  let html='';
+  items.forEach(([n,c])=>{ html+=`<div class="es-row"><span>${n}</span><span>${c===0?'FREE':'$'+c}</span></div>`; });
+  html+=`<div class="es-row"><span>Total Spent</span><span style="color:${crashed?'#e53e3e':'#3dab4e'}">$${spent}</span></div>`;
+  if(!crashed) html+=`<div class="es-row"><span>Money Saved</span><span style="color:#3dab4e">$${remaining}</span></div>`;
+  document.getElementById('end-summary').innerHTML=html;
 }
 
-function announceRoadblock(text) {
-  const el = document.getElementById('rb-announce');
-  el.textContent = '⚠️ ROADBLOCK! ' + text;
-  el.className = 'rb-announce show';
-}
-function clearRBAnnounce() {
-  document.getElementById('rb-announce').className = 'rb-announce';
-}
+function announceRoadblock(t){ const e=document.getElementById('rb-announce'); e.textContent='⚠️ ROADBLOCK! '+t; e.className='rb-announce show'; }
+function clearRBAnnounce(){ document.getElementById('rb-announce').className='rb-announce'; }
 
-function updateSidebar() {
-  const spent = totalSpent();
-  const remaining = BUDGET - spent;
-  const pct = Math.min((spent / BUDGET) * 100, 100);
-
-  const amtEl = document.getElementById('rem-amount');
-  amtEl.textContent = '$' + Math.max(remaining, 0);
-  amtEl.className = 'amount ' + (remaining < 0 ? 'danger' : remaining < 70 ? 'warn' : 'safe');
-
-  const bar = document.getElementById('bbar');
-  bar.style.width = pct + '%';
-  bar.className = 'budget-bar-fill' + (remaining < 70 ? ' danger' : '');
-
-  const container = document.getElementById('line-items');
-  container.innerHTML = '';
-  const items = [];
-  if (state.venueLabel) items.push([state.venueLabel, state.venueCost]);
-  if (state.tentPaid)   items.push(['⛺ Emergency Tent', 50]);
-  if (state.foodLabel)  items.push([state.foodLabel, state.foodCost]);
-  if (state.entertainLabel) items.push([state.entertainLabel, state.entertainCost]);
-  if (state.snacksLabel) items.push([state.snacksLabel, state.snacksCost]);
-  if (state.hypePaid)   items.push(['🍬 Premium Candy', 10]);
-
-  items.forEach(([name, cost]) => {
-    const div = document.createElement('div');
-    div.className = 'line-item show';
-    div.innerHTML = `<span class="li-name">${name}</span><span class="li-cost">${cost === 0 ? 'FREE' : '$' + cost}</span>`;
-    container.appendChild(div);
-  });
-
-  const hasCosts = items.length > 0;
-  document.getElementById('tot-div').style.display = hasCosts ? '' : 'none';
-  document.getElementById('tot-line').style.display = hasCosts ? '' : 'none';
-  document.getElementById('tot-spent').textContent = '$' + spent;
-
-  // Success state (all done, not crashed)
-  if (state.phase === 'done' && !state.crashed && spent <= BUDGET) {
-    document.getElementById('st-success').textContent = '🎉 All done! Under budget!';
-    document.getElementById('st-success').className = 'status-box success show';
-    const endBtn = document.getElementById('end-btn');
-    endBtn.textContent = '🎉 See Your Results!';
-    endBtn.className = 'action-btn show';
-  }
+function updateSidebar(){
+  const spent=totalSpent(), remaining=BUDGET-spent, pct=Math.min((spent/BUDGET)*100,100);
+  const a=document.getElementById('rem-amount');
+  a.textContent='$'+Math.max(remaining,0);
+  a.className='amount '+(remaining<0?'danger':remaining<70?'warn':'safe');
+  const bar=document.getElementById('bbar'); bar.style.width=pct+'%'; bar.className='budget-bar-fill'+(remaining<70?' danger':'');
+  const c=document.getElementById('line-items'); c.innerHTML='';
+  const items=[];
+  if(state.venueLabel) items.push([state.venueLabel,state.venueCost]);
+  if(state.tentPaid) items.push(['⛺ Emergency Tent',50]);
+  if(state.foodLabel) items.push([state.foodLabel,state.foodCost]);
+  if(state.entertainLabel) items.push([state.entertainLabel,state.entertainCost]);
+  if(state.snacksLabel) items.push([state.snacksLabel,state.snacksCost]);
+  if(state.hypePaid) items.push(['🍬 Premium Candy',10]);
+  items.forEach(([n,co])=>{ const d=document.createElement('div'); d.className='line-item'; d.innerHTML=`<span class="li-name">${n}</span><span class="li-cost">${co===0?'FREE':'$'+co}</span>`; c.appendChild(d); });
+  const has=items.length>0;
+  document.getElementById('tot-div').style.display=has?'':'none';
+  document.getElementById('tot-line').style.display=has?'':'none';
+  document.getElementById('tot-spent').textContent='$'+spent;
 }
 
-function resetAll() {
-  // Reset state
-  Object.assign(state, {
-    venue: null, venueLabel: '', venueCost: 0, tentPaid: false,
-    food: null, foodLabel: '', foodCost: 0, expensivePizza: false,
-    entertain: null, entertainLabel: '', entertainCost: 0,
-    snacks: null, snacksLabel: '', snacksCost: 0, hypePaid: false,
-    phase: 'venue', crashed: false
+function resetAll(){
+  Object.assign(state,{
+    venue:null,venueLabel:'',venueCost:0,tentPaid:false,
+    food:null,foodLabel:'',foodCost:0,expensivePizza:false,
+    entertain:null,entertainLabel:'',entertainCost:0,
+    snacks:null,snacksLabel:'',snacksCost:0,hypePaid:false,
+    phase:'venue',crashed:false
   });
-
-  // Reset UI
-  ['venue','food','entertain','snacks'].forEach(s => {
-    const card = document.getElementById('step-' + s);
-    card.className = 'step-card';
-    const num = document.getElementById('num-' + s);
-    num.className = 'step-num';
-    num.textContent = ['venue','food','entertain','snacks'].indexOf(s) + 1;
-    document.querySelectorAll('#step-' + s + ' .option-btn').forEach(b => {
-      b.classList.remove('selected', 'locked-opt');
-      // Re-attach onclick
-      b.onclick = function() { pick(s, this); };
-    });
-    document.getElementById('chosen-' + s).className = 'chosen-summary';
-    document.getElementById('chosen-' + s).innerHTML = '';
+  ORDER.forEach((s,i)=>{
+    document.getElementById('step-'+s).className='step-card';
+    const num=document.getElementById('num-'+s); num.className='step-num'; num.textContent=i+1;
+    document.querySelectorAll('#'+s+'-opts .option-btn').forEach(b=>{ b.classList.remove('selected','dim'); b.onclick=function(){pick(s,this);}; });
+    document.getElementById('confirm-'+s).className='confirm-banner';
+    document.getElementById('tag-'+s).textContent=''; document.getElementById('cost-'+s).textContent='';
+    pending[s]=null;
   });
-  ['rb-storm','rb-pizza','rb-hype'].forEach(id => document.getElementById(id).className = 'roadblock-banner');
-  document.getElementById('st-crash').className = 'status-box crash';
-  document.getElementById('st-success').className = 'status-box success';
-  document.getElementById('end-btn').className = 'action-btn';
-  document.getElementById('rb-announce').className = 'rb-announce';
-
-  document.getElementById('end-screen').className = '';
-  document.getElementById('welcome-screen').style.display = 'block';
-  document.getElementById('steps-panel').style.display = 'none';
-  document.getElementById('budget-sidebar').className = 'budget-sidebar';
+  ['rb-storm','rb-pizza','rb-hype'].forEach(id=>document.getElementById(id).className='roadblock-banner');
+  document.getElementById('st-crash').className='status-box crash';
+  document.getElementById('st-success').className='status-box success';
+  document.getElementById('end-btn').className='action-btn';
+  document.getElementById('rb-announce').className='rb-announce';
+  document.getElementById('end-screen').className='';
+  document.getElementById('welcome-screen').style.display='block';
+  document.getElementById('steps-panel').style.display='none';
+  document.getElementById('budget-sidebar').className='budget-sidebar';
   updateSidebar();
 }
 </script>
