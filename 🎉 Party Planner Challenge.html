@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<!-- saved from url=(0051)file:///C:/Users/cyril/Downloads/party_planner.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎉 Party Planner Challenge</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --budget: 250;
+    --bg: #fdf6ec;
+    --yellow: #FFD93D;
+    --orange: #FF6B35;
+    --green: #6BCB77;
+    --red: #FF4D4D;
+    --blue: #4D96FF;
+    --purple: #9B5DE5;
+    --dark: #1a1a2e;
+    --card-bg: #ffffff;
+    --radius: 18px;
+  }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 12px 40px;
+    background-image: radial-gradient(circle at 10% 20%, #ffe8d6 0%, transparent 50%),
+                      radial-gradient(circle at 90% 80%, #e0f0ff 0%, transparent 50%);
+  }
+
+  h1.title {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: var(--dark);
+    text-align: center;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+  }
+
+  .subtitle {
+    text-align: center;
+    color: #666;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 24px;
+  }
+
+  /* ── LAYOUT ── */
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 20px;
+    width: 100%;
+    max-width: 1000px;
+    align-items: start;
+  }
+
+  /* ── STEPS PANEL ── */
+  .steps-panel { display: flex; flex-direction: column; gap: 18px; }
+
+  .step-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    border: 2px solid transparent;
+    transition: border-color .2s;
+  }
+
+  .step-card.active { border-color: var(--yellow); }
+  .step-card.locked {
+    opacity: 0.45;
+    pointer-events: none;
+    filter: grayscale(0.4);
+  }
+
+  .step-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .step-num {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.5rem;
+    background: var(--yellow);
+    color: var(--dark);
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .step-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.25rem;
+    color: var(--dark);
+  }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+  }
+
+  .option-btn {
+    background: #f5f5f5;
+    border: 2.5px solid #e0e0e0;
+    border-radius: 14px;
+    padding: 14px 10px 10px;
+    cursor: pointer;
+    text-align: center;
+    transition: all .2s;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .option-btn:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+    border-color: var(--blue);
+  }
+
+  .option-btn.selected {
+    background: var(--dark);
+    color: #fff;
+    border-color: var(--dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+  }
+
+  .option-btn .emoji { font-size: 2rem; display: block; margin-bottom: 6px; }
+  .option-btn .opt-name { font-size: .85rem; display: block; color: inherit; }
+  .option-btn .opt-price {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    color: var(--orange);
+    display: block;
+    margin-top: 4px;
+  }
+  .option-btn.selected .opt-price { color: var(--yellow); }
+
+  /* ── ROADBLOCK ── */
+  .roadblock-banner {
+    display: none;
+    background: linear-gradient(135deg, #ff4d4d, #ff6b35);
+    color: #fff;
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin-top: 12px;
+    font-weight: 700;
+    line-height: 1.5;
+    animation: shake .4s ease;
+  }
+  .roadblock-banner.show { display: flex; gap: 10px; align-items: flex-start; }
+  .roadblock-banner .rb-icon { font-size: 1.8rem; flex-shrink: 0; }
+
+  .roadblock-choice {
+    display: none;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .roadblock-choice.show { display: flex; flex-wrap: wrap; }
+
+  .rb-btn {
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: .9rem;
+    transition: all .18s;
+  }
+  .rb-btn.pay { background: #fff; color: var(--red); }
+  .rb-btn.back { background: rgba(255,255,255,0.25); color: #fff; border: 2px solid rgba(255,255,255,.6); }
+  .rb-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+
+  /* ── BUDGET SIDEBAR ── */
+  .budget-sidebar {
+    position: sticky;
+    top: 20px;
+    background: var(--dark);
+    border-radius: var(--radius);
+    padding: 24px 20px;
+    color: #fff;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  }
+
+  .sidebar-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.3rem;
+    margin-bottom: 16px;
+    color: var(--yellow);
+    text-align: center;
+  }
+
+  /* Budget bar */
+  .budget-bar-wrap {
+    background: rgba(255,255,255,0.1);
+    border-radius: 99px;
+    height: 22px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    position: relative;
+  }
+  .budget-bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, var(--green), var(--yellow));
+    transition: width .5s cubic-bezier(.34,1.56,.64,1), background .3s;
+    width: 0%;
+  }
+  .budget-bar-fill.danger { background: linear-gradient(90deg, var(--orange), var(--red)); }
+
+  .budget-numbers {
+    display: flex;
+    justify-content: space-between;
+    font-size: .8rem;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 18px;
+  }
+
+  .budget-remaining {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .budget-remaining .amount {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.8rem;
+    line-height: 1;
+    transition: color .3s;
+  }
+  .budget-remaining .amount.safe { color: var(--green); }
+  .budget-remaining .amount.warn { color: var(--yellow); }
+  .budget-remaining .amount.danger { color: var(--red); }
+  .budget-remaining .label {
+    font-size: .8rem;
+    color: rgba(255,255,255,0.55);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 2px;
+  }
+
+  /* Line items */
+  .line-items { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+
+  .line-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: .88rem;
+    padding: 8px 10px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.07);
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity .3s, transform .3s;
+  }
+  .line-item.show { opacity: 1; transform: translateY(0); }
+  .line-item .li-name { color: rgba(255,255,255,0.8); font-weight: 600; }
+  .line-item .li-cost { font-family: 'Fredoka One', cursive; color: var(--yellow); }
+
+  .divider { border: none; border-top: 1px solid rgba(255,255,255,0.15); margin: 8px 0; }
+
+  .total-line {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    color: #fff;
+    padding: 0 4px;
+  }
+
+  /* ── STATUS MESSAGES ── */
+  .status-box {
+    display: none;
+    margin-top: 18px;
+    padding: 16px;
+    border-radius: 14px;
+    text-align: center;
+    font-weight: 800;
+    font-size: 1rem;
+    line-height: 1.5;
+    animation: popIn .4s cubic-bezier(.34,1.56,.64,1);
+  }
+  .status-box.show { display: block; }
+  .status-box.crash {
+    background: linear-gradient(135deg, var(--red), var(--orange));
+    color: #fff;
+  }
+  .status-box.success {
+    background: linear-gradient(135deg, var(--green), #3dab4e);
+    color: #fff;
+  }
+
+  .reset-btn {
+    width: 100%;
+    margin-top: 14px;
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    background: var(--yellow);
+    color: var(--dark);
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.05rem;
+    cursor: pointer;
+    display: none;
+    transition: transform .18s;
+  }
+  .reset-btn.show { display: block; }
+  .reset-btn:hover { transform: scale(1.04); }
+
+  /* ── COMPLETE BADGE ── */
+  .complete-badge {
+    display: none;
+    align-items: center;
+    gap: 6px;
+    font-size: .8rem;
+    font-weight: 800;
+    color: var(--green);
+    margin-top: 8px;
+  }
+  .complete-badge.show { display: flex; }
+
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20%,60% { transform: translateX(-6px); }
+    40%,80% { transform: translateX(6px); }
+  }
+  @keyframes popIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 680px) {
+    .layout { grid-template-columns: 1fr; }
+    .budget-sidebar { position: static; }
+    .options-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<h1 class="title">🎉 Party Planner Challenge</h1>
+<p class="subtitle">Plan a party for 15 kids — stay under $250! 🎈</p>
+
+<div class="layout">
+
+  <!-- ── STEPS ── -->
+  <div class="steps-panel">
+
+    <!-- STEP 1: VENUE -->
+    <div class="step-card active" id="step-venue">
+      <div class="step-header">
+        <div class="step-num">1</div>
+        <div>
+          <div class="step-title">🏠 Choose Your Venue</div>
+          <div style="font-size:.85rem;color:#888;font-weight:600;">Where's the party happening?</div>
+        </div>
+      </div>
+      <div class="options-grid" id="venue-options">
+        <button class="option-btn" data-step="venue" data-key="backyard" data-cost="0" onclick="pick(this)">
+          <span class="emoji">🏡</span>
+          <span class="opt-name">Backyard</span>
+          <span class="opt-price">FREE</span>
+        </button>
+        <button class="option-btn" data-step="venue" data-key="pavilion" data-cost="25" onclick="pick(this)">
+          <span class="emoji">⛺</span>
+          <span class="opt-name">Park Pavilion</span>
+          <span class="opt-price">$25</span>
+        </button>
+        <button class="option-btn" data-step="venue" data-key="hall" data-cost="125" onclick="pick(this)">
+          <span class="emoji">🏛️</span>
+          <span class="opt-name">Rented Hall</span>
+          <span class="opt-price">$125</span>
+        </button>
+      </div>
+
+      <!-- Backyard Storm Roadblock -->
+      <div class="roadblock-banner" id="storm-roadblock">
+        <div class="rb-icon">⛈️</div>
+        <div>
+          <strong>ROADBLOCK: Unexpected Storm!</strong><br>
+          A storm is forecast! Since you chose the <strong>Backyard</strong>, you must spend an emergency <strong>$50</strong> to rent a pop-up tent — or pick a covered venue.
+          <div class="roadblock-choice show" id="storm-choice">
+            <button class="rb-btn pay" onclick="payTent()">💸 Pay $50 for Tent</button>
+            <button class="rb-btn back" onclick="resetVenue()">🔄 Pick Different Venue</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: FOOD -->
+    <div class="step-card locked" id="step-food">
+      <div class="step-header">
+        <div class="step-num">2</div>
+        <div>
+          <div class="step-title">🍽️ Choose Your Food</div>
+          <div style="font-size:.85rem;color:#888;font-weight:600;">Lunch for all 15 kids</div>
+        </div>
+      </div>
+      <div class="options-grid" id="food-options">
+        <button class="option-btn" data-step="food" data-key="pizza" data-cost="50" onclick="pick(this)">
+          <span class="emoji">🍕</span>
+          <span class="opt-name">Pizza</span>
+          <span class="opt-price">$50</span>
+        </button>
+        <button class="option-btn" data-step="food" data-key="tacos" data-cost="55" onclick="pick(this)">
+          <span class="emoji">🌮</span>
+          <span class="opt-name">Tacos</span>
+          <span class="opt-price">$55</span>
+        </button>
+        <button class="option-btn" data-step="food" data-key="samosas" data-cost="60" onclick="pick(this)">
+          <span class="emoji">🥟</span>
+          <span class="opt-name">Samosas</span>
+          <span class="opt-price">$60</span>
+        </button>
+      </div>
+
+      <!-- Pizza Sold Out Roadblock -->
+      <div class="roadblock-banner" id="pizza-roadblock">
+        <div class="rb-icon">🚫</div>
+        <div>
+          <strong>ROADBLOCK: Pizza Sold Out!</strong><br>
+          The pizza place ran out of dough! Individual pizzas now cost <strong>$130</strong> instead of $50. Can your budget handle it?
+          <div class="roadblock-choice show" id="pizza-choice">
+            <button class="rb-btn pay" onclick="payExpensivePizza()">💸 Pay $130 for Pizza</button>
+            <button class="rb-btn back" onclick="resetFood()">🔄 Pick Different Food</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3: ENTERTAINMENT -->
+    <div class="step-card locked" id="step-entertain">
+      <div class="step-header">
+        <div class="step-num">3</div>
+        <div>
+          <div class="step-title">🎶 Choose Entertainment</div>
+          <div style="font-size:.85rem;color:#888;font-weight:600;">Keep 15 kids entertained!</div>
+        </div>
+      </div>
+      <div class="options-grid" id="entertain-options">
+        <button class="option-btn" data-step="entertain" data-key="movie" data-cost="0" onclick="pick(this)">
+          <span class="emoji">🎬</span>
+          <span class="opt-name">Projected Movie</span>
+          <span class="opt-price">FREE</span>
+        </button>
+        <button class="option-btn" data-step="entertain" data-key="dj" data-cost="15" onclick="pick(this)">
+          <span class="emoji">🎧</span>
+          <span class="opt-name">Spotify DJ</span>
+          <span class="opt-price">$15</span>
+        </button>
+        <button class="option-btn" data-step="entertain" data-key="foam" data-cost="250" onclick="pick(this)">
+          <span class="emoji">🫧</span>
+          <span class="opt-name">Foam Party</span>
+          <span class="opt-price">$250</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 4: SNACKS -->
+    <div class="step-card locked" id="step-snacks">
+      <div class="step-header">
+        <div class="step-num">4</div>
+        <div>
+          <div class="step-title">🍿 Choose Snacks</div>
+          <div style="font-size:.85rem;color:#888;font-weight:600;">Final stretch!</div>
+        </div>
+      </div>
+      <div class="options-grid" id="snack-options">
+        <button class="option-btn" data-step="snacks" data-key="standard" data-cost="40" onclick="pick(this)">
+          <span class="emoji">🛍️</span>
+          <span class="opt-name">Standard Pack<br><small style="font-weight:600;font-size:.75rem;opacity:.7">Chips, Pop, Popcorn, Water</small></span>
+          <span class="opt-price">$40</span>
+        </button>
+        <button class="option-btn" data-step="snacks" data-key="hype" data-cost="48" onclick="pick(this)">
+          <span class="emoji">🍭</span>
+          <span class="opt-name">Hype Monster Pack<br><small style="font-weight:600;font-size:.75rem;opacity:.7">Standard + Candy Bag</small></span>
+          <span class="opt-price">$48</span>
+        </button>
+      </div>
+
+      <!-- Hype Meter Roadblock -->
+      <div class="roadblock-banner" id="hype-roadblock">
+        <div class="rb-icon">📱</div>
+        <div>
+          <strong>ROADBLOCK: The Hype Meter!</strong><br>
+          Everyone's buzzing about your party. Add the Premium Candy upgrade for <strong>$10</strong> to max the hype — or stay strong!
+          <div class="roadblock-choice show" id="hype-choice">
+            <button class="rb-btn pay" onclick="payHype()">🍬 Pay $10 for Hype</button>
+            <button class="rb-btn back" onclick="skipHype()">💪 Stay Strong</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── BUDGET SIDEBAR ── -->
+  <div class="budget-sidebar">
+    <div class="sidebar-title">💰 Budget Tracker</div>
+
+    <div class="budget-remaining">
+      <div class="amount safe" id="remaining-amount">$250</div>
+      <div class="label">Remaining</div>
+    </div>
+
+    <div class="budget-bar-wrap">
+      <div class="budget-bar-fill" id="budget-bar" style="width: 0%;"></div>
+    </div>
+    <div class="budget-numbers">
+      <span>$0 spent</span>
+      <span>$250 budget</span>
+    </div>
+
+    <div class="line-items" id="line-items"></div>
+
+    <hr class="divider" id="total-divider" style="display:none">
+    <div class="total-line" id="total-line" style="display:none">
+      <span>Total Spent</span>
+      <span id="total-spent-label">$0</span>
+    </div>
+
+    <div class="status-box crash" id="status-crash">
+      💥 BUDGET CRASH!<br>
+      <span style="font-size:.85rem;font-weight:600;">Your card was declined. Try again!</span>
+    </div>
+    <div class="status-box success" id="status-success">
+      🎉 PARTY SUCCESS!<br>
+      <span style="font-size:.85rem;font-weight:600;">You stayed under budget — great planning!</span>
+    </div>
+
+    <button class="reset-btn" id="reset-btn" onclick="resetAll()">🔄 Start Over</button>
+  </div>
+
+</div>
+
+<script>
+  // ── STATE ──
+  const BUDGET = 250;
+  const state = {
+    venue: null, venueLabel: '', venueCost: 0,
+    tentPaid: false,
+    food: null, foodLabel: '', foodCost: 0,
+    expensivePizza: false,
+    entertain: null, entertainLabel: '', entertainCost: 0,
+    snacks: null, snacksLabel: '', snacksCost: 0,
+    hypePaid: false,
+    done: false
+  };
+
+  const steps = ['venue', 'food', 'entertain', 'snacks'];
+  const stepIds = {
+    venue: 'step-venue',
+    food: 'step-food',
+    entertain: 'step-entertain',
+    snacks: 'step-snacks'
+  };
+
+  function totalSpent() {
+    return state.venueCost +
+           (state.tentPaid ? 50 : 0) +
+           state.foodCost +
+           state.entertainCost +
+           state.snacksCost +
+           (state.hypePaid ? 10 : 0);
+  }
+
+  function updateUI() {
+    const spent = totalSpent();
+    const remaining = BUDGET - spent;
+    const pct = Math.min((spent / BUDGET) * 100, 100);
+    const isDanger = remaining < 50;
+
+    // Remaining amount
+    const amtEl = document.getElementById('remaining-amount');
+    amtEl.textContent = '$' + Math.max(remaining, 0);
+    amtEl.className = 'amount ' + (remaining < 0 ? 'danger' : remaining < 60 ? 'warn' : 'safe');
+
+    // Bar
+    const bar = document.getElementById('budget-bar');
+    bar.style.width = pct + '%';
+    bar.className = 'budget-bar-fill' + (isDanger ? ' danger' : '');
+
+    // Line items
+    const container = document.getElementById('line-items');
+    container.innerHTML = '';
+    const items = [];
+    if (state.venueLabel) items.push([state.venueLabel, state.venueCost]);
+    if (state.tentPaid)  items.push(['🏕️ Tent (emergency)', 50]);
+    if (state.foodLabel) items.push([state.foodLabel, state.foodCost]);
+    if (state.entertainLabel) items.push([state.entertainLabel, state.entertainCost]);
+    if (state.snacksLabel) items.push([state.snacksLabel, state.snacksCost]);
+    if (state.hypePaid) items.push(['🍬 Premium Candy', 10]);
+
+    items.forEach(([name, cost]) => {
+      const div = document.createElement('div');
+      div.className = 'line-item show';
+      div.innerHTML = `<span class="li-name">${name}</span><span class="li-cost">$${cost}</span>`;
+      container.appendChild(div);
+    });
+
+    const hasCosts = items.length > 0;
+    document.getElementById('total-divider').style.display = hasCosts ? '' : 'none';
+    document.getElementById('total-line').style.display = hasCosts ? '' : 'none';
+    document.getElementById('total-spent-label').textContent = '$' + spent;
+
+    // Crash / success
+    const crash = remaining < 0;
+    document.getElementById('status-crash').className = 'status-box crash' + (crash ? ' show' : '');
+    document.getElementById('status-success').className = 'status-box success' + (!crash && state.done ? ' show' : '');
+    document.getElementById('reset-btn').className = 'reset-btn' + ((crash || state.done) ? ' show' : '');
+  }
+
+  function unlockStep(stepId) {
+    const el = document.getElementById(stepId);
+    el.classList.remove('locked');
+    el.classList.add('active');
+    setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+  }
+
+  function lockStep(stepId) {
+    const el = document.getElementById(stepId);
+    el.classList.add('locked');
+    el.classList.remove('active');
+  }
+
+  function lockFrom(stepKey) {
+    const idx = steps.indexOf(stepKey);
+    for (let i = idx; i < steps.length; i++) lockStep(stepIds[steps[i]]);
+  }
+
+  function pick(btn) {
+    if (state.done) return;
+    const step = btn.dataset.step;
+    const key = btn.dataset.key;
+    const cost = parseInt(btn.dataset.cost);
+
+    // Clear all sibling selections
+    document.querySelectorAll(`[data-step="${step}"]`).forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+
+    if (step === 'venue') handleVenue(key, cost, btn);
+    else if (step === 'food') handleFood(key, cost, btn);
+    else if (step === 'entertain') handleEntertain(key, cost);
+    else if (step === 'snacks') handleSnacks(key, cost);
+
+    updateUI();
+  }
+
+  // ── VENUE ──
+  function handleVenue(key, cost, btn) {
+    // Hide storm roadblock first
+    document.getElementById('storm-roadblock').className = 'roadblock-banner';
+    state.tentPaid = false;
+    state.venueLabel = btn.querySelector('.opt-name').textContent;
+    state.venueCost = cost;
+    state.venue = key;
+
+    // Reset downstream
+    clearFromFood();
+
+    if (key === 'backyard') {
+      // Storm roadblock triggers
+      document.getElementById('storm-roadblock').className = 'roadblock-banner show';
+      // Don't unlock food yet — wait for tent decision
+    } else {
+      unlockStep('step-food');
+    }
+  }
+
+  function payTent() {
+    state.tentPaid = true;
+    document.getElementById('storm-roadblock').className = 'roadblock-banner';
+    unlockStep('step-food');
+    updateUI();
+  }
+
+  function resetVenue() {
+    document.querySelectorAll('[data-step="venue"]').forEach(b => b.classList.remove('selected'));
+    document.getElementById('storm-roadblock').className = 'roadblock-banner';
+    state.venue = null; state.venueLabel = ''; state.venueCost = 0; state.tentPaid = false;
+    clearFromFood();
+    lockFrom('food');
+    updateUI();
+  }
+
+  // ── FOOD ──
+  function handleFood(key, cost, btn) {
+    document.getElementById('pizza-roadblock').className = 'roadblock-banner';
+    state.expensivePizza = false;
+    state.foodLabel = btn.querySelector('.opt-name').textContent;
+    state.foodCost = cost;
+    state.food = key;
+    clearFromEntertain();
+
+    if (key === 'pizza') {
+      document.getElementById('pizza-roadblock').className = 'roadblock-banner show';
+      // Don't unlock entertain yet
+    } else {
+      unlockStep('step-entertain');
+    }
+  }
+
+  function payExpensivePizza() {
+    state.expensivePizza = true;
+    state.foodCost = 130;
+    state.foodLabel = '🍕 Individual Pizzas';
+    document.getElementById('pizza-roadblock').className = 'roadblock-banner';
+    unlockStep('step-entertain');
+    updateUI();
+  }
+
+  function resetFood() {
+    document.querySelectorAll('[data-step="food"]').forEach(b => b.classList.remove('selected'));
+    document.getElementById('pizza-roadblock').className = 'roadblock-banner';
+    state.food = null; state.foodLabel = ''; state.foodCost = 0; state.expensivePizza = false;
+    clearFromEntertain();
+    lockFrom('entertain');
+    updateUI();
+  }
+
+  // ── ENTERTAIN ──
+  function handleEntertain(key, cost) {
+    state.entertain = key;
+    state.entertainLabel = { movie: '🎬 Projected Movie', dj: '🎧 Spotify DJ', foam: '🫧 Foam Party' }[key];
+    state.entertainCost = cost;
+    clearFromSnacks();
+    unlockStep('step-snacks');
+    // Check if foam already crashes budget
+    checkCrash();
+  }
+
+  // ── SNACKS ──
+  function handleSnacks(key, cost) {
+    document.getElementById('hype-roadblock').className = 'roadblock-banner';
+    state.hypePaid = false;
+    state.snacks = key;
+    state.snacksLabel = { standard: '🛍️ Standard Pack', hype: '🍭 Hype Monster Pack' }[key];
+    state.snacksCost = cost;
+
+    if (key === 'hype') {
+      document.getElementById('hype-roadblock').className = 'roadblock-banner show';
+    } else {
+      finalize();
+    }
+  }
+
+  function payHype() {
+    state.hypePaid = true;
+    document.getElementById('hype-roadblock').className = 'roadblock-banner';
+    finalize();
+    updateUI();
+  }
+
+  function skipHype() {
+    document.getElementById('hype-roadblock').className = 'roadblock-banner';
+    finalize();
+    updateUI();
+  }
+
+  function finalize() {
+    state.done = true;
+    updateUI();
+  }
+
+  function checkCrash() {
+    if (totalSpent() > BUDGET) {
+      state.done = true;
+    }
+  }
+
+  // ── CLEAR HELPERS ──
+  function clearFromFood() {
+    state.food = null; state.foodLabel = ''; state.foodCost = 0; state.expensivePizza = false;
+    document.querySelectorAll('[data-step="food"]').forEach(b => b.classList.remove('selected'));
+    document.getElementById('pizza-roadblock').className = 'roadblock-banner';
+    clearFromEntertain();
+  }
+  function clearFromEntertain() {
+    state.entertain = null; state.entertainLabel = ''; state.entertainCost = 0;
+    document.querySelectorAll('[data-step="entertain"]').forEach(b => b.classList.remove('selected'));
+    clearFromSnacks();
+    lockStep(stepIds['entertain']);
+  }
+  function clearFromSnacks() {
+    state.snacks = null; state.snacksLabel = ''; state.snacksCost = 0;
+    state.hypePaid = false; state.done = false;
+    document.querySelectorAll('[data-step="snacks"]').forEach(b => b.classList.remove('selected'));
+    document.getElementById('hype-roadblock').className = 'roadblock-banner';
+    document.getElementById('status-crash').className = 'status-box crash';
+    document.getElementById('status-success').className = 'status-box success';
+    document.getElementById('reset-btn').className = 'reset-btn';
+    lockStep(stepIds['snacks']);
+  }
+
+  function resetAll() {
+    Object.assign(state, {
+      venue: null, venueLabel: '', venueCost: 0, tentPaid: false,
+      food: null, foodLabel: '', foodCost: 0, expensivePizza: false,
+      entertain: null, entertainLabel: '', entertainCost: 0,
+      snacks: null, snacksLabel: '', snacksCost: 0, hypePaid: false, done: false
+    });
+    document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+    ['storm-roadblock','pizza-roadblock','hype-roadblock'].forEach(id =>
+      document.getElementById(id).className = 'roadblock-banner'
+    );
+    ['step-food','step-entertain','step-snacks'].forEach(id => lockStep(id));
+    document.getElementById('step-venue').classList.add('active');
+    updateUI();
+  }
+
+  // Init
+  updateUI();
+</script>
+
+
+</body></html>
